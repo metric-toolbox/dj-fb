@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>YourBrand — Turn long videos into viral clips</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>tailwind.config={theme:{extend:{colors:{bg:'var(--bg)',surf:'var(--surf)',ink:'var(--ink)',mute:'var(--mute)',lav:'var(--lav)',line:'var(--line)',brand:{DEFAULT:'#7c3aed',dark:'#6d28d9'}}}}}</script>
+<style>
+:root{--bg:#fff;--surf:#fff;--ink:#17112b;--mute:#5b5575;--lav:#f4f0ff;--line:#e8e2f8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f0b1d;--surf:#191330;--ink:#f3f0ff;--mute:#b4acd0;--lav:#1a1433;--line:#2d2550;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f0b1d;--surf:#191330;--ink:#f3f0ff;--mute:#b4acd0;--lav:#1a1433;--line:#2d2550;color-scheme:dark}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--bg)}
+.glass{background:color-mix(in srgb,var(--bg) 82%,transparent)}
+.rv{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}.rv.in{opacity:1;transform:none}
+@keyframes mq{to{transform:translateX(-50%)}}.mq{animation:mq 45s linear infinite;width:max-content}.mqw:hover .mq{animation-play-state:paused}
+*:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.mq{animation:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/htm@3.1.1/dist/htm.js"></script>
+<script>
+const {createElement:h,useState,useEffect}=React,html=htm.bind(h),B='YourBrand';
+const G=['from-violet-500 to-fuchsia-400','from-indigo-500 to-sky-400','from-fuchsia-500 to-orange-300','from-purple-600 to-pink-400','from-blue-500 to-violet-400','from-emerald-400 to-teal-600','from-rose-400 to-purple-500','from-amber-300 to-violet-500'];
+const Btn=({c,cls=''})=>html`<a href="#paste" className=${'inline-flex items-center justify-center rounded-full bg-brand px-6 py-3 font-semibold text-white shadow-lg shadow-purple-500/30 transition hover:-translate-y-0.5 hover:bg-brand-dark '+cls}>${c}</a>`;
+const Ph=({g=0,l,cls='',children})=>html`<div role="img" aria-label=${l} className=${'relative overflow-hidden bg-gradient-to-br '+G[g%8]+' '+cls}>${children}</div>`;
+const Eb=({t})=>html`<p className="mb-3 text-center text-xs font-bold uppercase tracking-widest text-brand">${t}</p>`;
+const H2=({t,cls=''})=>html`<h2 className=${'mx-auto max-w-3xl text-center text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl '+cls}>${t}</h2>`;
+const Sec=({id,cls='',children})=>html`<section id=${id} className=${'rv px-5 py-16 sm:py-24 '+cls}><div className="mx-auto max-w-6xl">${children}</div></section>`;
+const Play=()=>html`<span className="absolute inset-0 m-auto grid h-12 w-12 place-items-center rounded-full bg-white/90 text-brand shadow-lg" aria-hidden="true">▶</span>`;
+const Mock=({n=3})=>html`<div className="absolute inset-x-6 bottom-6 space-y-2" aria-hidden="true">${Array.from({length:n},(_,i)=>html`<div key=${i} className="h-3 rounded-full bg-white/70" style=${{width:(90-i*22)+'%'}}></div>`)}</div>`;
+
+const NAV=[['Agent','#features',1],['AI Studio','#features'],['Use cases',[['Marketers',['Social managers','Growth leads','Brand teams']],['Creators',['Podcasters','YouTubers','Educators']],['Agency',['Editors','Freelancers','Client leads']]]],['Tools',['Clip maker','Caption generator','Video translator','Aspect ratio resizer']],['Resources',['Blog','Roadmap','Help center','Tutorials','Community','Knowledge base']],['API','#api']];
+const New=()=>html`<span className="ml-1.5 rounded-full bg-brand px-1.5 py-0.5 text-[10px] font-bold text-white">NEW</span>`;
+function Header(){const[o,setO]=useState(false);
+return html`<header className="glass sticky top-[env(safe-area-inset-top,0px)] z-50 border-b border-line backdrop-blur-lg">
+<div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
+<a href="#top" className="flex items-center gap-2 text-xl font-extrabold"><span className="grid h-8 w-8 place-items-center rounded-xl bg-brand text-sm text-white" aria-hidden="true">▶</span>${B}</a>
+<nav aria-label="Main" className="hidden items-center gap-1 lg:flex">${NAV.map(([n,x,nw])=>Array.isArray(x)?html`<div className="group relative" key=${n}><button type="button" className="rounded-lg px-3 py-2 font-medium hover:bg-lav">${n} ▾</button>
+<div className="invisible absolute left-0 top-full w-64 rounded-2xl border border-line bg-surf p-3 opacity-0 shadow-xl transition group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">${x.map(i=>Array.isArray(i)?html`<div key=${i[0]} className="rounded-xl p-2 hover:bg-lav"><b>${i[0]}</b><p className="text-sm text-mute">${i[1].join(', ')}</p></div>`:html`<a key=${i} href="#" className="block rounded-lg px-3 py-2 hover:bg-lav">${i}</a>`)}</div></div>`:html`<a key=${n} href=${x} className="rounded-lg px-3 py-2 font-medium hover:bg-lav">${n}${nw&&html`<${New}/>`}</a>`)}</nav>
+<div className="flex items-center gap-2"><${Btn} c="Get clips" cls="hidden !py-2 sm:inline-flex"/>
+<button type="button" aria-label="Menu" aria-expanded=${o} onClick=${()=>setO(!o)} className="rounded-lg border border-line px-3 py-2 lg:hidden">${o?'✕':'☰'}</button></div></div>
+${o&&html`<div className="max-h-[70vh] overflow-y-auto border-t border-line bg-surf px-5 py-3 lg:hidden">${NAV.map(([n,x])=>html`<div key=${n} className="py-2">${Array.isArray(x)?html`<b>${n}</b><div className="mt-1 grid gap-1 pl-3 text-mute">${x.map(i=>html`<a key=${i[0]||i} href="#" onClick=${()=>setO(false)}>${i[0]||i}</a>`)}</div>`:html`<a href=${x} className="font-semibold" onClick=${()=>setO(false)}>${n}</a>`}</div>`)}<${Btn} c="Get clips" cls="mt-2 w-full"/></div>`}
+</header>`}
+
+const fmt=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
+function useStudio(){
+const[st,setSt]=useState({k:'idle',m:'',p:0}),[clips,setClips]=useState([]),[len,setLen]=useState(30),[n,setN]=useState(5),[dl,setDl]=useState(null),ref=React.useRef({});
+useEffect(()=>{try{window.claude&&window.claude.use('downloads').then(d=>d&&setDl({s:d}),()=>{})}catch(e){}},[]);
+const run=async f=>{const R=ref.current,W=720,H=1280;R.stop=false;clips.forEach(c=>URL.revokeObjectURL(c.url));setClips([]);
+setSt({k:'work',m:'Reading your video…',p:0});setTimeout(()=>{const r=document.getElementById('results');r&&r.scrollIntoView({behavior:'smooth'})},80);
+try{if(!window.MediaRecorder)throw Error('This browser can’t record clips. Use Chrome, Edge or Firefox on a computer.');
+const v=document.createElement('video');v.src=URL.createObjectURL(f);v.playsInline=true;v.preload='auto';
+await new Promise((ok,no)=>{v.onloadedmetadata=ok;v.onerror=()=>no(Error('This file can’t be read as a video.'))});
+const D=v.duration;if(!isFinite(D))throw Error('Couldn’t read this video’s length. Try an MP4 file.');
+const L=Math.max(5,Math.min(len,Math.floor(D))),N=Math.min(n,Math.max(1,Math.floor(D/L))),starts=[];let e=null;
+if(f.size<150e6){setSt({k:'work',m:'Finding the best moments…',p:0});
+try{const a=new AudioContext(),b=await a.decodeAudioData(await f.arrayBuffer()),d=b.getChannelData(0),sr=b.sampleRate;a.close();
+e=Array.from({length:Math.floor(D)},(_,s)=>{let t=0;const z=Math.min(d.length,(s+1)*sr);for(let i=s*sr;i<z;i+=16)t+=d[i]*d[i];return t})}catch(x){e=null}}
+if(e){const sc=e.map((_,s)=>{let t=0;for(let i=s;i<Math.min(e.length,s+L);i++)t+=e[i];return t});
+for(let k=0;k<N;k++){let bi=-1,bv=-1;sc.forEach((x,s)=>{if(s+L<=D&&x>bv&&starts.every(p=>Math.abs(p-s)>=L)){bv=x;bi=s}});if(bi<0)break;starts.push(bi)}}
+else for(let k=0;k<N;k++)starts.push(Math.floor(k*(D-L)/Math.max(1,N-1)));
+starts.sort((a,b)=>a-b);
+const ac=new AudioContext(),dest=ac.createMediaStreamDestination();ac.createMediaElementSource(v).connect(dest);await ac.resume();
+const cv=document.createElement('canvas');cv.width=W;cv.height=H;const cx=cv.getContext('2d'),out=[];
+for(let i=0;i<starts.length&&!R.stop;i++){
+setSt({k:'work',m:'Cutting clip '+(i+1)+' of '+starts.length+'. Keep this tab open.',p:i/starts.length});
+if(Math.abs(v.currentTime-starts[i])>.05){v.currentTime=starts[i];await new Promise(r=>v.onseeked=r)}
+const sw=v.videoWidth,sh=v.videoHeight,ar=9/16;let cw=sw,chh=sh;if(sw/sh>ar)cw=sh*ar;else chh=sw/ar;const ox=(sw-cw)/2,oy=(sh-chh)/2;
+const mt=MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus')?'video/webm;codecs=vp9,opus':'video/webm',ch=[];
+const mr=new MediaRecorder(new MediaStream([...cv.captureStream(30).getVideoTracks(),...dest.stream.getAudioTracks()]),{mimeType:mt,videoBitsPerSecond:3e6});
+mr.ondataavailable=ev=>{ev.data.size&&ch.push(ev.data)};const done=new Promise(r=>mr.onstop=r);
+const t=setInterval(()=>cx.drawImage(v,ox,oy,cw,chh,0,0,W,H),33);
+mr.start(1000);await v.play();
+await new Promise(r=>{const c=setInterval(()=>{if(v.currentTime>=starts[i]+L||v.ended||R.stop){clearInterval(c);r()}},200)});
+v.pause();mr.stop();clearInterval(t);await done;
+const bl=new Blob(ch,{type:'video/webm'});out.push({s:starts[i],l:L,bl,url:URL.createObjectURL(bl)});setClips([...out]);}
+ac.close();setSt({k:'done',m:out.length?'Done. '+out.length+' clips are ready to download.':'Stopped before any clip was ready.',p:1});
+}catch(err){setSt({k:'err',m:err.message||'Something went wrong.',p:0})}};
+const pick=()=>{const i=document.createElement('input');i.type='file';i.accept='video/*';i.onchange=()=>{const f=i.files[0];if(f){ref.current.f=f;run(f)}};i.click()};
+const go=l=>{if(st.k==='work')return;const u=(l||'').trim();if(/^https?:/i.test(u))return fromLink(u);const f=ref.current.f;if(f)return run(f);pick()};
+const fromLink=async u=>{const R=ref.current;R.stop=false;setClips([]);setSt({k:'work',m:'Contacting the clip server…',p:0});setTimeout(()=>{const r=document.getElementById('results');r&&r.scrollIntoView({behavior:'smooth'})},80);
+try{const pg=await fetch('/api/ping').then(r=>r.json()).catch(()=>null);
+if(!pg)return setSt({k:'err',m:'Links need the clip server. Run server.py on your computer, open http://localhost:8000 and paste the link there. You can still upload a video file here.',p:0});
+const{id}=await fetch('/api/start',{method:'POST',body:JSON.stringify({url:u,len,n})}).then(r=>r.json());
+for(;;){await new Promise(r=>setTimeout(r,1500));const J=await fetch('/api/job?id='+id).then(r=>r.json());setClips(J.clips);setSt({k:J.st,m:J.msg,p:J.p});if(J.st!=='work'||R.stop)break}}
+catch(err){setSt({k:'err',m:err.message||'Something went wrong.',p:0})}};
+const save=async(c,i)=>{try{await dl.s.save({filename:'clip-'+(i+1)+'.webm',data:c.bl})}catch(e){if(!e||e.code!=='declined')setSt(s=>({...s,m:'Couldn’t save that clip: '+((e&&e.message)||'unavailable')}))}};
+return{st,clips,len,setLen,n,setN,dl,go,pick,save,stop:()=>{ref.current.stop=true}}}
+const Results=({S})=>{const{st,clips}=S;if(st.k==='idle')return null;
+return html`<section id="results" className="bg-lav px-5 py-14"><div className="mx-auto max-w-6xl"><h2 className="text-2xl font-extrabold sm:text-4xl">Your clips</h2>
+<p role="status" className=${'mt-2 '+(st.k==='err'?'font-semibold text-red-500':'text-mute')}>${st.m}</p>
+${st.k==='work'&&html`<div className="mt-4 flex items-center gap-3"><div className="h-2 flex-1 overflow-hidden rounded-full bg-surf"><div className="h-full rounded-full bg-brand transition-all" style=${{width:Math.max(6,st.p*100)+'%'}}></div></div><button type="button" onClick=${S.stop} className="rounded-full border border-line bg-surf px-4 py-1.5 text-sm font-semibold">Stop</button></div>`}
+<div className="mt-8 grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-5">${clips.map((c,i)=>html`<article key=${i} className="overflow-hidden rounded-2xl border border-line bg-surf shadow-md"><video src=${c.url} controls playsInline className="aspect-[9/16] w-full bg-black object-cover"></video><div className="p-3"><p className="text-sm font-bold">Clip ${i+1}</p><p className="text-xs text-mute">${fmt(c.s)} to ${fmt(c.s+c.l)}</p>${S.dl&&c.bl?html`<button type="button" onClick=${()=>S.save(c,i)} className="mt-2 w-full rounded-full bg-brand px-3 py-2 text-sm font-semibold text-white hover:bg-brand-dark">Download</button>`:html`<a href=${c.url} download=${'clip-'+(i+1)+'.webm'} className="mt-2 block rounded-full bg-brand px-3 py-2 text-center text-sm font-semibold text-white hover:bg-brand-dark">Download</a>`}</div></article>`)}</div></div></section>`};
+const CHIPS=['Product ad','Software ad','Talking head','Tutorial','Podcast clips','Localize','Listicle','Customer story','Trailer','Mini-doc'];
+const Hero=({S})=>{const[l,setL]=useState('');return html`<section id="top" className="bg-gradient-to-b from-lav to-bg px-5 pb-16 pt-14 text-center sm:pt-20"><div className="mx-auto max-w-4xl">
+<h1 className="text-4xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl">Turn your long video into viral clips with <span className="text-brand">AI magic</span></h1>
+<p className="mx-auto mt-5 max-w-2xl text-lg text-mute">Our AI converts long-form videos into short, ready-to-post clips for TikTok, Instagram, YouTube Shorts and more.</p>
+<div className="mx-auto mt-8 flex max-w-2xl flex-col gap-3 rounded-3xl border border-line bg-surf p-3 shadow-xl shadow-purple-500/10 sm:flex-row sm:items-center sm:rounded-full">
+<label htmlFor="paste" className="sr-only">Video link</label>
+<input id="paste" type="url" value=${l} onChange=${e=>setL(e.target.value)} onKeyDown=${e=>e.key==='Enter'&&S.go(l)} placeholder="Paste a link, or upload a video file" className="min-w-0 flex-1 rounded-full bg-transparent px-4 py-3 outline-none placeholder:text-mute"/>
+<button type="button" onClick=${()=>S.go(l)} className="inline-flex items-center justify-center rounded-full bg-brand px-6 py-3 font-semibold text-white shadow-lg shadow-purple-500/30 transition hover:-translate-y-0.5 hover:bg-brand-dark">Get clips</button><button type="button" onClick=${S.pick} className="rounded-full px-3 py-2 text-sm font-semibold text-brand hover:bg-lav">or Upload</button></div>
+<div className="mt-3 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-mute"><label>Clip length <select value=${S.len} onChange=${e=>S.setLen(+e.target.value)} className="rounded-lg border border-line bg-surf px-2 py-1 text-ink">${[15,30,45,60].map(v=>html`<option key=${v} value=${v}>${v}s</option>`)}</select></label><label>Number of clips <select value=${S.n} onChange=${e=>S.setN(+e.target.value)} className="rounded-lg border border-line bg-surf px-2 py-1 text-ink">${[3,5,8].map(v=>html`<option key=${v} value=${v}>${v}</option>`)}</select></label><span>Runs in your browser, so your video is never uploaded.</span></div>
+<ul className="mt-6 flex flex-wrap justify-center gap-2">${CHIPS.map(c=>html`<li key=${c}><a href="#" className="block rounded-full border border-line bg-surf px-4 py-1.5 text-sm font-medium transition hover:-translate-y-0.5 hover:border-brand hover:text-brand">${c}</a></li>`)}</ul>
+<a href="#" className="mt-4 inline-block text-sm font-semibold text-brand hover:underline">Explore all templates →</a></div>
+<${Ph} g=${0} l="Product demo cover: long video turning into short vertical clips" cls="mx-auto mt-12 grid aspect-video max-w-5xl place-items-center rounded-3xl shadow-2xl shadow-purple-500/30"><${Play}/>
+<div className="absolute bottom-4 right-4 hidden gap-3 sm:flex" aria-hidden="true">${[1,2,3].map(i=>html`<div key=${i} className=${'aspect-[9/16] w-20 rounded-xl border-2 border-white/80 bg-gradient-to-br '+G[i+2]}></div>`)}</div><//>
+</section>`};
+
+const LOGOS=['Northwind','Lumio','Orbitly','Fable & Co','Brightly','Kinetic','Hexa','Verdant'];
+const REV=[['G2','4.7'],['Capterra','4.9'],['Software Advice','4.9'],['GetApp','4.9']];
+const Proof=()=>html`<${Sec} id="proof" cls="!py-12"><p className="text-center text-lg font-semibold">Trusted by 10 million+ creators & businesses</p>
+<div className="mqw mt-6 overflow-hidden" style=${{maskImage:'linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)'}}><div className="mq flex gap-12">${[0,1].map(k=>html`<div key=${k} className="flex gap-12" aria-hidden=${k?'true':undefined}>${LOGOS.map(l=>html`<span key=${l} className="flex items-center gap-2 whitespace-nowrap text-xl font-bold text-mute opacity-60 grayscale"><span className="h-6 w-6 rounded-md bg-current opacity-50"></span>${l}</span>`)}</div>`)}</div></div>
+<div className="mt-10 grid grid-cols-2 gap-4 lg:grid-cols-4">${REV.map(([n,s])=>html`<div key=${n} className="rounded-2xl border border-line bg-surf p-4 text-center shadow-sm"><p className="font-bold">${n}</p><p className="text-amber-500" aria-hidden="true">★★★★★</p><p className="text-2xl font-extrabold">${s}<span className="text-sm font-medium text-mute"> / 5</span></p></div>`)}</div>
+<div className="mt-5 flex flex-wrap justify-center gap-2 text-sm font-semibold">${['Leader 2026','Best Ease of Use','High Performer','Users Love Us'].map(b=>html`<span key=${b} className="rounded-full bg-lav px-4 py-1.5 text-brand">🏅 ${b}</span>`)}</div><//>`;
+
+const PL=[['TT','TikTok'],['YT','YouTube'],['X','X'],['IG','Instagram'],['f','Facebook'],['in','LinkedIn']];
+const TAGS=['Course','TV Show','Interview','News','Coach','Podcast'],HND=['@learnwithsam','@primetimeclips','@theinterviewroom','@dailybrief','@coachkim','@midnightpod'];
+const Showcase=()=>html`<${Sec} id="clips" cls="bg-lav"><${Eb} t="SOCIAL-READY CLIPS WITH AI"/><${H2} t="Turn long video into 30+ clips, in one click."/>
+<div className="mt-6 flex justify-center gap-2">${PL.map(([a,n])=>html`<span key=${n} title=${n} aria-label=${n} role="img" className="grid h-10 w-10 place-items-center rounded-full bg-surf text-xs font-extrabold shadow">${a}</span>`)}</div>
+<div className="mqw -mx-5 mt-10 overflow-hidden px-5"><div className="mq flex gap-4" style=${{animationDuration:'60s'}}>${[0,1].map(k=>html`<div key=${k} className="flex gap-4" aria-hidden=${k?'true':undefined}>${[...TAGS,...TAGS].map((t,i)=>html`<${Ph} key=${i} g=${i} l=${t+' clip preview'} cls="grid aspect-[9/16] w-40 shrink-0 place-items-center rounded-2xl shadow-lg sm:w-48"><span className="absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-0.5 text-xs font-bold text-brand">${t}</span><${Play}/><span className="absolute inset-x-3 bottom-3 flex items-center justify-between text-sm font-semibold text-white">${HND[i%6]}<span className="grid h-6 w-6 place-items-center rounded-full bg-white/90 text-[10px] font-extrabold text-brand">${PL[i%6][0]}</span></span><//>`)}</div>`)}</div></div>
+<div className="mt-10 text-center"><${Btn} c="Get clips"/></div><//>`;
+
+const WHO=[['Creators & podcasters','Turn every episode into a week of posts.'],['Coaches & business owners','Share your expertise without hours of editing.'],['Marketers','Ship campaign-ready clips from webinars and demos.'],['Agencies & freelancers','Deliver more client work, right on schedule.']];
+const Who=()=>html`<${Sec} id="who"><${H2} t="Built for everyone, every team"/><div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">${WHO.map(([t,d],i)=>html`<article key=${t} className="overflow-hidden rounded-2xl border border-line bg-surf shadow-md transition duration-300 hover:-translate-y-2 hover:shadow-xl"><${Ph} g=${i+1} l=${t} cls="aspect-[4/3]"/><div className="p-5"><h3 className="text-lg font-bold">${t}</h3><p className="mt-1 text-mute">${d}</p></div></article>`)}</div><//>`;
+
+const Teams=()=>html`<${Sec} id="teams" cls="bg-lav"><div className="grid grid-cols-12 items-center gap-10">
+<${Ph} g=${4} l="Shared team workspace with projects and members" cls="col-span-12 aspect-[4/3] rounded-3xl shadow-xl lg:col-span-6"><${Mock} n=${4}/><//>
+<div className="col-span-12 lg:col-span-6"><h2 className="text-3xl font-extrabold tracking-tight sm:text-5xl">Introducing Teams for Collaboration</h2>
+<p className="mt-4 max-w-lg text-lg text-mute">Give everyone one shared workspace. Leaders invite members, organize projects, and send previews to clients for quick feedback, so clips go live faster.</p><div className="mt-7"><${Btn} c="Invite members"/></div></div></div><//>`;
+
+const F=[['AI Clipping','Finds the strongest highlights in your video and reframes them to vertical automatically.'],['AI Captions + emoji','Accurate, animated captions with emoji that match the mood of every line.'],['AI B-roll','Adds relevant cutaway footage so talking-head moments always stay visual.'],['AI social captions + hashtags','Writes post copy and hashtags tuned to each platform.']];
+function Feat(){const[i,setI]=useState(0);return html`<${Sec} id="features"><${Eb} t=${'What makes '+B+' different?'}/><${H2} t="AI features that actually work"/>
+<div className="mt-12 grid grid-cols-12 items-center gap-8"><div role="tablist" aria-label="AI features" className="col-span-12 space-y-3 lg:col-span-5">${F.map(([t,d],k)=>html`<button key=${t} role="tab" id=${'t'+k} aria-selected=${i===k} aria-controls="fp" type="button" onClick=${()=>setI(k)} className=${'flex w-full gap-4 rounded-2xl border p-4 text-left transition '+(i===k?'border-brand bg-lav shadow-md':'border-line bg-surf hover:border-brand')}><span className=${'grid h-8 w-8 shrink-0 place-items-center rounded-full text-sm font-bold '+(i===k?'bg-brand text-white':'bg-lav text-brand')}>${k+1}</span><span><b className="block">${t}</b>${i===k&&html`<span className="mt-1 block text-mute">${d}</span>`}</span></button>`)}</div>
+<${Ph} g=${i} l=${F[i][0]+' screenshot'} cls="col-span-12 aspect-[4/3] rounded-3xl shadow-xl transition-all lg:col-span-7"><div role="tabpanel" id="fp" aria-labelledby=${'t'+i} className="absolute left-5 top-5 rounded-full bg-white/90 px-3 py-1 text-sm font-bold text-brand">${F[i][0]}</div><${Mock} n=${3}/><//></div><//>`}
+
+const STEPS=[['Upload and transcribe','Drop in a file or paste a link. We transcribe it in minutes so every word is searchable.'],['Click “Get AI clips”','The AI picks the best moments, reframes them to vertical and adds captions.'],['Publish and share','Download your clips or share a preview link, then post to every platform.']];
+const How=()=>html`<${Sec} id="how" cls="bg-lav"><${H2} t="From raw footage to social-ready clips, a workflow that just works"/><div className="mt-14 space-y-16">${STEPS.map(([t,d],i)=>html`<div key=${t} className="grid grid-cols-12 items-center gap-10"><${Ph} g=${i*2} l=${'Step '+(i+1)+': '+t} cls=${'col-span-12 aspect-[4/3] rounded-3xl shadow-xl lg:col-span-6 '+(i%2?'lg:order-last':'')}><${Mock} n=${i+2}/><//><div className="col-span-12 lg:col-span-6"><p className="text-sm font-bold text-brand">Step ${i+1}</p><h3 className="mt-1 text-2xl font-extrabold sm:text-3xl">${t}</h3><p className="mt-3 max-w-md text-lg text-mute">${d}</p><div className="mt-6"><${Btn} c="Get clips"/></div></div></div>`)}</div><//>`;
+
+const ED=[['Edit by text','Delete words in the transcript to trim the video.'],['Caption translation','Translate captions into 100+ languages.'],['Change aspect ratio','Switch between 9:16, 1:1 and 16:9 in one tap.'],['Timeline editing','Fine-tune cuts, layers and timing by hand.'],['Brand templates','Save your fonts, colors and logo for every clip.'],['Link sharing','Send a preview link for quick feedback.']];
+const Editor=()=>html`<${Sec} id="editor"><${H2} t="Plus, an easy-to-use video editor for full creative control"/><p className="mt-4 text-center text-lg text-mute">Edit with AI or manually, all up to you.</p>
+<div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">${ED.map(([t,d],i)=>html`<article key=${t} className="rounded-2xl border border-line bg-surf p-4 shadow-md transition hover:-translate-y-1 hover:shadow-xl"><${Ph} g=${i+3} l=${t+' screenshot'} cls="aspect-video rounded-xl"><${Mock} n=${2}/><//><h3 className="mt-4 font-bold">${t}</h3><p className="text-mute">${d}</p></article>`)}</div><//>`;
+
+const T=[['Maya Ortiz','Podcast host','“One upload and I had a week of posts. The clips felt hand-picked.”','G2'],['Daniel Reyes','Marketing lead','“Our webinar library finally works for us. It finds the moments we would have chosen.”','Capterra'],['Priya Nair','Course creator','“Captions land perfectly and I rarely touch a thing. It’s the least fiddly tool I’ve used.”','G2'],['Tom Becker','Agency owner','“We turn client clips around the same afternoon, and approvals are a single link.”','Capterra']];
+const ST=[['10x','faster than manual clipping'],['5x','increase in views'],['80%','time saved'],['100%','no manual tweaks needed']];
+const SH=['Set up in minutes, and the first batch looked great.','The vertical reframing keeps faces centered every time.','My editor now spends time on stories, not trimming.','Captions are sharp and the emoji feel natural.','Exactly the highlights I would have flagged myself.','Simple enough that my whole team uses it daily.'];
+const Reviews=()=>html`<${Sec} id="reviews" cls="bg-lav"><${Eb} t="FASTER, SHARPER, BETTER"/><${H2} t="What creators say"/>
+<div className="mt-12 grid gap-6 md:grid-cols-2">${T.map(([n,r,q,b],i)=>html`<div key=${n} className="rounded-3xl border border-line bg-surf p-6 shadow-lg"><p className="text-5xl font-extrabold text-brand">${ST[i][0]}</p><p className="font-semibold">${ST[i][1]}</p>
+<blockquote className="mt-5 text-lg">${q}</blockquote><div className="mt-5 flex items-center gap-3"><${Ph} g=${i+4} l=${'Avatar of '+n} cls="h-11 w-11 rounded-full"/><div className="flex-1"><b>${n}</b><p className="text-sm text-mute">${r}</p></div><span className="rounded-full bg-lav px-3 py-1 text-xs font-bold text-brand">★ ${b}</span></div></div>`)}</div>
+<div className="mt-8 gap-4 sm:columns-2 lg:columns-3">${SH.map((s,i)=>html`<figure key=${i} className="mb-4 break-inside-avoid rounded-2xl border border-line bg-surf p-5 shadow-sm"><blockquote>“${s}”</blockquote><figcaption className="mt-3 text-sm text-mute">${['Alex J.','Sofia M.','Ravi K.','Lena W.','Omar S.','Chloe D.'][i]}, ${['Creator','Producer','Coach','Marketer','Host','Freelancer'][i]}</figcaption></figure>`)}</div><//>`;
+
+const CTA=()=>html`<section className="rv px-5 py-16"><div className="mx-auto max-w-6xl rounded-3xl bg-gradient-to-br from-violet-700 via-purple-600 to-fuchsia-500 px-6 py-16 text-center text-white shadow-2xl shadow-purple-500/30 sm:py-20"><h2 className="text-3xl font-extrabold sm:text-5xl">Ready to create your first clips?</h2><a href="#paste" className="mt-8 inline-flex rounded-full bg-white px-8 py-3 font-bold text-brand transition hover:-translate-y-0.5 hover:shadow-xl">Get clips</a></div></section>`;
+
+const COLS=[['Tools',['Clip maker','Caption generator','Video translator','Aspect ratio resizer']],['Who we help',['Creators','Coaches','Marketers','Agencies']],['Blog',['Latest posts','Clipping guides','Social tips']],['Resources',['Help center','Tutorials','Community',B+' vs Competitor',B+' vs Another tool']],['Company',['About','Careers','Contact','Press']],['Legal',['Terms','Privacy','Cookies']]];
+const Footer=()=>html`<footer className="border-t border-line bg-surf px-5 py-14"><div className="mx-auto grid max-w-6xl grid-cols-12 gap-8">
+<div className="col-span-12 lg:col-span-3"><a href="#top" className="flex items-center gap-2 text-xl font-extrabold"><span className="grid h-8 w-8 place-items-center rounded-xl bg-brand text-sm text-white" aria-hidden="true">▶</span>${B}</a>
+<div className="mt-5 flex items-center gap-3"><div role="img" aria-label="App download QR code placeholder" className="grid h-20 w-20 shrink-0 grid-cols-7 gap-px rounded-lg border border-line bg-white p-1.5">${Array.from({length:49},(_,i)=>html`<i key=${i} className=${(i*7+i%5)%3===0||i%8===0?'bg-black':'bg-white'}></i>`)}</div><p className="text-sm text-mute">Scan to get the app</p></div>
+<a href="#" className="mt-4 inline-flex items-center gap-2 rounded-xl border border-line px-3 py-2 text-sm font-semibold"><span className="grid h-6 w-6 place-items-center rounded-full bg-orange-500 text-white" aria-hidden="true">▲</span>Product of the Day</a></div>
+<div className="col-span-12 grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-9 lg:grid-cols-6">${COLS.map(([t,l])=>html`<div key=${t}><h3 className="font-bold">${t}</h3><ul className="mt-3 space-y-2 text-sm text-mute">${l.map(x=>html`<li key=${x}><a href="#" className="hover:text-brand hover:underline">${x}</a></li>`)}</ul></div>`)}</div></div>
+<p className="mx-auto mt-12 max-w-6xl text-sm text-mute">© 2026 ${B}. All rights reserved.</p></footer>`;
+
+function App(){const S=useStudio();useEffect(()=>{const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.08});document.querySelectorAll('.rv').forEach(el=>io.observe(el));return()=>io.disconnect()},[]);
+return html`<a href="#features" className="block bg-brand px-4 py-2 text-center text-sm text-white hover:bg-brand-dark"><span className="mr-2 rounded-full bg-white px-2 py-0.5 text-[11px] font-bold text-brand">NEW</span>Meet the AI video agent: describe the edit, get the clip →</a>
+<${Header}/><main><${Hero} S=${S}/><${Results} S=${S}/><${Proof}/><${Showcase}/><${Who}/><${Teams}/><${Feat}/><${How}/><${Editor}/><${Reviews}/><${CTA}/></main><${Footer}/>`}
+ReactDOM.createRoot(document.getElementById('root')).render(h(App));
+</script>
+</body>
+</html>
